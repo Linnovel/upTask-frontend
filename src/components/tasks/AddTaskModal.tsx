@@ -1,11 +1,17 @@
 import React, { Fragment } from "react"
 import { Dialog, Transition } from "@headlessui/react"
-import { useLocation, useNavigate } from "react-router-dom"
+import { useLocation, useNavigate, useParams } from "react-router-dom"
 import { useForm } from "react-hook-form"
 import TaskForm from "./TaskForm"
 import type { TaskFormData } from "@/types"
+import { useMutation, useQueryClient } from "@tanstack/react-query"
+import { createTask } from "@/services/TaskApi"
+import { toast } from "react-toastify"
 
 export default function AddTaskModal() {
+  //Obtenre el params el ID params.projectId
+  const params = useParams()
+  const projectId = params.projectId!
   const navigate = useNavigate()
   const location = useLocation()
 
@@ -22,14 +28,39 @@ export default function AddTaskModal() {
     description: "",
   }
 
+  //React-Hook-Form con los types (recuerda que cambian) -- Y el formData y mandarlo al handleCreateTask que llamara a la function para crear una task con los valores que se le pasan al parametro
   const {
     register,
+    reset,
     handleSubmit,
     formState: { errors },
   } = useForm({ defaultValues: initialValues })
 
+  const queryClient = useQueryClient()
+
+  const { mutate } = useMutation({
+    mutationFn: createTask,
+
+    onError: (error) => {
+      toast.error(error.message)
+    },
+    onSuccess: (data) => {
+      queryClient.invalidateQueries({
+        queryKey: ["editProject", projectId],
+      })
+      toast.success(data)
+      //reset para resetear los valores del formulario
+      reset()
+      navigate(location.pathname, { replace: true })
+    },
+  })
+
   function handleCreateTask(formData: TaskFormData) {
-    console.log(formData)
+    const data = {
+      formData,
+      projectId,
+    }
+    mutate(data)
   }
 
   return (

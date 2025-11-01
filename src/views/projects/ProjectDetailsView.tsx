@@ -1,4 +1,7 @@
 import AddTaskModal from "@/components/tasks/AddTaskModal"
+import EditTaskData from "@/components/tasks/EditTaskData"
+import TaskList from "@/components/tasks/TaskList"
+import TaskModalDetails from "@/components/tasks/TaskModalDetails"
 import { getProjectsById } from "@/services/ProjectAPI"
 import { useQuery } from "@tanstack/react-query"
 import React from "react"
@@ -20,7 +23,7 @@ function ProjectDetailsView() {
     queryFn: () => getProjectsById(projectId),
     retry: false,
   })
-
+  console.log(data)
   if (isLoading) return "cargando..."
 
   if (isError) return <Navigate to={"/404"} />
@@ -43,7 +46,10 @@ function ProjectDetailsView() {
             Agregar Tarea
           </button>
         </nav>
+        <TaskList tasks={data.tasks} />
         <AddTaskModal />
+        <EditTaskData />
+        <TaskModalDetails />
       </React.Fragment>
     )
 }
