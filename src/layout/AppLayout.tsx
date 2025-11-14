@@ -7,10 +7,13 @@ import NavMenu from "@/components/NavMenu"
 import { useAuth } from "@/hooks/useAuth"
 
 function AppLayout() {
+  //Aca se usa el hook de autenticacion para saber si el usuario esta autenticado
+
   const { data, isError, isLoading } = useAuth()
 
   if (isLoading) return <p>Cargando...</p>
 
+  //Si no esta autenticado, redirige al login
   if (isError) {
     return <Navigate to={"/auth/login"} />
   }

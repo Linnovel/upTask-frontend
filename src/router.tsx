@@ -27,6 +27,7 @@ export default function Router() {
           <Route path="/projects/:projectId" element={<ProjectDetailsView />} />
         </Route>
 
+        {/* // SE USA ESTE LAYOUT PARA LAS RUTAS DE AUTENTICACION  */}
         {/* Ruta y layout para autenticaicon de usarios de Proyectos y tareas*/}
         <Route element={<AuthLayout />}>
           <Route path="/auth/login" element={<LoginView />} />

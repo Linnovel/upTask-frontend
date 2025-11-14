@@ -51,6 +51,10 @@ export async function requestConfirmationCode(
   }
 }
 
+//Cuando el usuario se registra, se le devuelve un token de autenticacion
+// Y esta funcion lo guarda en el localStorage
+//Esta function se usa en el LoginView.tsx donde pones el email y password para iniciar sesion
+// Y revisa si el email y password son correctos y devuelve el token del localstorage
 export async function AuthenticateUSer(formData: UserLoginForm) {
   try {
     const url = `/auth/login`
@@ -106,6 +110,7 @@ export async function updatePasswordWithToken({
   }
 }
 
+//Query para obtener el usuario autenticado
 export async function getUser() {
   try {
     const data = await api.get<User>("/auth/user")
