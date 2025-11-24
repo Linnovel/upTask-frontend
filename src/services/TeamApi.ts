@@ -64,3 +64,21 @@ export async function getProjectTeam(
     throw error
   }
 }
+
+export async function deleteUserFromProject({
+  projectId,
+  userId,
+}: {
+  projectId: Project["_id"]
+  userId: TeamMember["_id"]
+}) {
+  try {
+    // The backend validation expects the field name `userId` in the request body.
+    const { data } = await api.delete(`/projects/${projectId}/team/${userId}`)
+    return data
+  } catch (error) {
+    if (isAxiosError(error) && error.response) {
+      throw new Error(error.response?.data.error)
+    }
+  }
+}

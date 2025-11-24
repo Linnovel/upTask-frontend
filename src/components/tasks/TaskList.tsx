@@ -5,6 +5,7 @@ import { statusColors, statusTrasnlations } from "@/locales/es"
 
 interface TaskListProps {
   tasks: Task[]
+  canEdit: boolean
 }
 
 type GroupTask = {
@@ -19,7 +20,7 @@ const initialStatusGroups: GroupTask = {
   completed: [],
 }
 
-function TaskList({ tasks }: TaskListProps) {
+function TaskList({ tasks, canEdit }: TaskListProps) {
   const groupedTasks = tasks.reduce((acc, task) => {
     let currentGroup = acc[task.status] ? [...acc[task.status]] : []
     currentGroup = [...currentGroup, task]
@@ -44,7 +45,9 @@ function TaskList({ tasks }: TaskListProps) {
                   No Hay tareas
                 </li>
               ) : (
-                tasks.map((task) => <TaskCard key={task._id} task={task} />)
+                tasks.map((task) => (
+                  <TaskCard canEdit={canEdit} key={task._id} task={task} />
+                ))
               )}
             </ul>
           </div>

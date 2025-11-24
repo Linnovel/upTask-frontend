@@ -1,10 +1,11 @@
 import AddMemberModal from "@/components/team/AddMemberModal"
-import { getProjectTeam } from "@/services/TeamApi"
+import { deleteUserFromProject, getProjectTeam } from "@/services/TeamApi"
 import { Menu, Transition } from "@headlessui/react"
 import { EllipsisVerticalIcon } from "@heroicons/react/20/solid"
-import { useQuery } from "@tanstack/react-query"
+import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query"
 import React, { Fragment } from "react"
 import { Link, useNavigate, useParams } from "react-router-dom"
+import { toast } from "react-toastify"
 
 function ProjectTeamView() {
   const navigate = useNavigate()
@@ -16,6 +17,27 @@ function ProjectTeamView() {
     queryFn: () => getProjectTeam(projectId),
     retry: false,
   })
+
+  const queryClient = useQueryClient()
+  const { mutate } = useMutation({
+    mutationFn: deleteUserFromProject,
+    onError: (error) => {
+      toast.error(error.message)
+    },
+    onSuccess: (data) => {
+      toast.success(data)
+      queryClient.invalidateQueries({ queryKey: ["projectTeam", projectId] })
+    },
+  })
+
+  //Puedes usar esta forma o directamente en el button
+  //   function deleteMember(userId: string) {
+  //     const data = {
+  //       userId,
+  //         projectId,}
+
+  //     mutate(data)
+  //   }
 
   if (isLoading) return "Cargando..."
 
@@ -85,6 +107,12 @@ function ProjectTeamView() {
                       <Menu.Items className="absolute right-0 z-10 mt-2 w-56 origin-top-right rounded-md bg-white py-2 shadow-lg ring-1 ring-gray-900/5 focus:outline-none">
                         <Menu.Item>
                           <button
+                            onClick={() =>
+                              mutate({
+                                projectId,
+                                userId: member._id,
+                              })
+                            }
                             type="button"
                             className="block px-3 py-1 text-sm leading-6 text-red-500"
                           >
