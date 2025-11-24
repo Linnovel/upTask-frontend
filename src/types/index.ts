@@ -86,3 +86,17 @@ export const userSchema = authSchema
   })
 
 export type User = z.infer<typeof userSchema>
+
+/*TEAM MEMBERS*/
+
+// eslint-disable-next-line @typescript-eslint/no-unused-vars
+const teamMemberSchema = userSchema.pick({
+  name: true,
+  email: true,
+  _id: true,
+})
+export const teamMembersSchema = z.array(teamMemberSchema)
+
+export type TeamMember = z.infer<typeof teamMemberSchema>
+//usar pick para solo el email para el formulario
+export type TeamMemberForm = Pick<TeamMember, "email">

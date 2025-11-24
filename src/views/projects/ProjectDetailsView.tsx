@@ -5,7 +5,7 @@ import TaskModalDetails from "@/components/tasks/TaskModalDetails"
 import { getProjectsById } from "@/services/ProjectAPI"
 import { useQuery } from "@tanstack/react-query"
 import React from "react"
-import { Navigate, useNavigate, useParams } from "react-router-dom"
+import { Link, Navigate, useNavigate, useParams } from "react-router-dom"
 
 function ProjectDetailsView() {
   const navigate = useNavigate()
@@ -23,7 +23,7 @@ function ProjectDetailsView() {
     queryFn: () => getProjectsById(projectId),
     retry: false,
   })
-  console.log(data)
+
   if (isLoading) return "cargando..."
 
   if (isError) return <Navigate to={"/404"} />
@@ -45,6 +45,12 @@ function ProjectDetailsView() {
           >
             Agregar Tarea
           </button>
+          <Link
+            className="bg-fuchsia-400 hover:bg-purple-500 px-10 py-3 rounded-sm text-white text-xl font-bold cursor-pointer transition-colors"
+            to={"team"}
+          >
+            Colaboradores
+          </Link>
         </nav>
         <TaskList tasks={data.tasks} />
         <AddTaskModal />
